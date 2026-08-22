@@ -22,6 +22,13 @@ let vehicles = [
     color: 'Atlas White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/creta/1.png',
+    gallery: [
+      '/cars/creta/1.png',
+      '/cars/creta/2.png',
+      '/cars/creta/3.png',
+      '/cars/creta/4.png',
+    ],
   },
 
   {
@@ -46,6 +53,13 @@ let vehicles = [
     color: 'Pristine White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/nexon/1.png',
+    gallery: [
+      '/cars/nexon/1.png',
+      '/cars/nexon/2.png',
+      '/cars/nexon/3.png',
+      '/cars/nexon/4.png',
+    ],
   },
 
   {
@@ -70,6 +84,13 @@ let vehicles = [
     color: 'Empowered Oxide',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/nexon-ev/1.png',
+    gallery: [
+      '/cars/nexon-ev/1.png',
+      '/cars/nexon-ev/2.png',
+      '/cars/nexon-ev/3.png',
+      '/cars/nexon-ev/4.png',
+    ],
   },
 
   {
@@ -94,6 +115,13 @@ let vehicles = [
     color: 'Super White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/innova-hycross/1.png',
+    gallery: [
+      '/cars/innova-hycross/1.png',
+      '/cars/innova-hycross/2.png',
+      '/cars/innova-hycross/3.png',
+      '/cars/innova-hycross/4.png',
+    ],
   },
 
   {
@@ -118,6 +146,13 @@ let vehicles = [
     color: 'Arctic White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/grand-vitara/1.png',
+    gallery: [
+      '/cars/grand-vitara/1.png',
+      '/cars/grand-vitara/2.png',
+      '/cars/grand-vitara/3.png',
+      '/cars/grand-vitara/4.png',
+    ],
   },
 
   {
@@ -142,6 +177,13 @@ let vehicles = [
     color: 'Glacier White Pearl',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/seltos/1.png',
+    gallery: [
+      '/cars/seltos/1.png',
+      '/cars/seltos/2.png',
+      '/cars/seltos/3.png',
+      '/cars/seltos/4.png',
+    ],
   },
 
   {
@@ -166,6 +208,13 @@ let vehicles = [
     color: 'Everest White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/scorpio-n/1.png',
+    gallery: [
+      '/cars/scorpio-n/1.png',
+      '/cars/scorpio-n/2.png',
+      '/cars/scorpio-n/3.png',
+      '/cars/scorpio-n/4.png',
+    ],
   },
 
   {
@@ -190,6 +239,13 @@ let vehicles = [
     color: 'Super White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/fortuner/1.png',
+    gallery: [
+      '/cars/fortuner/1.png',
+      '/cars/fortuner/2.png',
+      '/cars/fortuner/3.png',
+      '/cars/fortuner/4.png',
+    ],
   },
 
   {
@@ -214,6 +270,13 @@ let vehicles = [
     color: 'Atlas White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/i20/1.png',
+    gallery: [
+      '/cars/i20/1.png',
+      '/cars/i20/2.png',
+      '/cars/i20/3.png',
+      '/cars/i20/4.png',
+    ],
   },
 
   {
@@ -238,6 +301,13 @@ let vehicles = [
     color: 'Nexa Blue',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/baleno/1.png',
+    gallery: [
+      '/cars/baleno/1.png',
+      '/cars/baleno/2.png',
+      '/cars/baleno/3.png',
+      '/cars/baleno/4.png',
+    ],
   },
 
   {
@@ -260,6 +330,13 @@ let vehicles = [
     color: 'Platinum White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/city/1.png',
+    gallery: [
+      '/cars/city/1.png',
+      '/cars/city/2.png',
+      '/cars/city/3.png',
+      '/cars/city/4.png',
+    ],
   },
 
   {
@@ -282,6 +359,13 @@ let vehicles = [
     color: 'Modern Steel',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/civic/1.png',
+    gallery: [
+      '/cars/civic/1.png',
+      '/cars/civic/2.png',
+      '/cars/civic/3.png',
+      '/cars/civic/4.png',
+    ],
   },
 
   {
@@ -304,6 +388,13 @@ let vehicles = [
     color: 'Silver Metallic',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/fortuner/1.png',
+    gallery: [
+      '/cars/fortuner/1.png',
+      '/cars/fortuner/2.png',
+      '/cars/fortuner/3.png',
+      '/cars/fortuner/4.png',
+    ],
   },
 
   {
@@ -327,6 +418,13 @@ let vehicles = [
     color: 'Oberon Black',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/harrier/1.png',
+    gallery: [
+      '/cars/harrier/1.png',
+      '/cars/harrier/2.png',
+      '/cars/harrier/3.png',
+      '/cars/harrier/4.png',
+    ],
   },
 
   {
@@ -350,6 +448,13 @@ let vehicles = [
     color: 'Polar White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/creta/1.png',
+    gallery: [
+      '/cars/creta/1.png',
+      '/cars/creta/2.png',
+      '/cars/creta/3.png',
+      '/cars/creta/4.png',
+    ],
   },
 
   {
@@ -373,6 +478,13 @@ let vehicles = [
     color: 'Portimao Blue',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/bmw-3-series/1.png',
+    gallery: [
+      '/cars/bmw-3-series/1.png',
+      '/cars/bmw-3-series/2.png',
+      '/cars/bmw-3-series/3.png',
+      '/cars/bmw-3-series/4.png',
+    ],
   },
 
   {
@@ -396,6 +508,13 @@ let vehicles = [
     color: 'Race Red',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/mustang/1.png',
+    gallery: [
+      '/cars/mustang/1.png',
+      '/cars/mustang/2.png',
+      '/cars/mustang/3.png',
+      '/cars/mustang/4.png',
+    ],
   },
 
   {
@@ -419,86 +538,85 @@ let vehicles = [
     color: 'Arctic White',
     location: 'Hyderabad',
     available: true,
+    image: '/cars/zs-ev/1.png',
+    gallery: [
+      '/cars/zs-ev/1.png',
+      '/cars/zs-ev/2.png',
+      '/cars/zs-ev/3.png',
+      '/cars/zs-ev/4.png',
+    ],
+  },
+
+  {
+    id: 19,
+    make: 'Toyota',
+    model: 'Camry',
+    year: 2024,
+    price: 3650000,
+    condition: 'Used',
+    odometer: 12000,
+    fuelType: 'Hybrid',
+    mileage: 'Up to 25.49 km/l',
+    transmission: 'Automatic',
+    bodyType: 'Sedan',
+    colors: [
+      'Platinum White Pearl',
+      'Attitude Black',
+      'Graphite Metallic',
+      'Silver Metallic',
+    ],
+    color: 'Platinum White Pearl',
+    location: 'Hyderabad',
+    available: true,
+    image: '/cars/camry/1.png',
+    gallery: [
+      '/cars/camry/1.png',
+      '/cars/camry/2.png',
+      '/cars/camry/3.png',
+      '/cars/camry/4.png',
+    ],
+  },
+
+  {
+    id: 20,
+    make: 'Maruti Suzuki',
+    model: 'Grand Vitara',
+    year: 2024,
+    price: 1425000,
+    condition: 'Used',
+    odometer: 26000,
+    fuelType: 'Hybrid',
+    mileage: 'Up to 27.97 km/l',
+    transmission: 'Automatic',
+    bodyType: 'SUV',
+    colors: [
+      'Arctic White',
+      'Nexa Blue',
+      'Grandeur Grey',
+      'Opulent Red',
+    ],
+    color: 'Nexa Blue',
+    location: 'Hyderabad',
+    available: true,
+    image: '/cars/grand-vitara/1.png',
+    gallery: [
+      '/cars/grand-vitara/1.png',
+      '/cars/grand-vitara/2.png',
+      '/cars/grand-vitara/3.png',
+      '/cars/grand-vitara/4.png',
+    ],
   },
 ]
-
-
-/* ---------------------------------------
-   IMAGE PATH GENERATOR
----------------------------------------- */
-
-const imageFolderMap = {
-  'Hyundai Creta': 'creta',
-  'Tata Nexon': 'nexon',
-  'Tata Nexon EV': 'nexon-ev',
-  'Toyota Innova Hycross': 'innova-hycross',
-  'Maruti Suzuki Grand Vitara': 'grand-vitara',
-  'Kia Seltos': 'seltos',
-  'Mahindra Scorpio-N': 'scorpio-n',
-  'Toyota Fortuner': 'fortuner',
-  'Hyundai i20': 'i20',
-  'Maruti Suzuki Baleno': 'baleno',
-  'Honda City': 'city',
-  'Honda Civic': 'civic',
-  'Tata Harrier': 'harrier',
-  'BMW 3 Series': 'bmw-3-series',
-  'Ford Mustang': 'mustang',
-  'Toyota Camry': 'camry',
-  'MG ZS EV': 'zs-ev',
-}
-
-
-function getImagePaths(make, model) {
-  const key = `${make} ${model}`
-  const folder = imageFolderMap[key]
-
-  if (!folder) {
-    return {
-      image: '',
-      gallery: [],
-    }
-  }
-
-  return {
-    image: `/cars/${folder}/1.png`,
-    gallery: [
-      `/cars/${folder}/1.png`,
-      `/cars/${folder}/2.png`,
-      `/cars/${folder}/3.png`,
-      `/cars/${folder}/4.png`,
-    ],
-  }
-}
-
-
-/* ---------------------------------------
-   ADD IMAGES TO ALL VEHICLES
----------------------------------------- */
-
-vehicles = vehicles.map((vehicle) => ({
-  ...vehicle,
-  ...getImagePaths(
-    vehicle.make,
-    vehicle.model
-  ),
-}))
-
-
-/* ---------------------------------------
-   SERVICES
----------------------------------------- */
 
 export const getVehicles = async () => {
   return vehicles
 }
-
 
 export const getVehicleById = async (id) => {
   return vehicles.find(
     (vehicle) => vehicle.id === Number(id)
   )
 }
-
 
 export const purchaseVehicle = async (id) => {
   const vehicle = vehicles.find(
@@ -520,7 +638,6 @@ export const purchaseVehicle = async (id) => {
   }
 }
 
-
 export const addVehicle = async (vehicleData) => {
   const newVehicle = {
     ...vehicleData,
@@ -528,9 +645,7 @@ export const addVehicle = async (vehicleData) => {
     id:
       vehicles.length > 0
         ? Math.max(
-            ...vehicles.map(
-              (vehicle) => vehicle.id
-            )
+            ...vehicles.map((vehicle) => vehicle.id)
           ) + 1
         : 1,
 
@@ -541,29 +656,28 @@ export const addVehicle = async (vehicleData) => {
         : []),
 
     available: true,
+
+    image:
+      vehicleData.image ||
+      `/cars/${vehicleData.model
+        .toLowerCase()
+        .replace(/\s+/g, '-')}/1.png`,
+
+    gallery:
+      vehicleData.gallery || [],
   }
-
-  const images = getImagePaths(
-    newVehicle.make,
-    newVehicle.model
-  )
-
-  newVehicle.image = images.image
-  newVehicle.gallery = images.gallery
 
   vehicles.push(newVehicle)
 
   return newVehicle
 }
 
-
 export const updateVehicle = async (
   id,
   vehicleData
 ) => {
   const index = vehicles.findIndex(
-    (vehicle) =>
-      vehicle.id === Number(id)
+    (vehicle) => vehicle.id === Number(id)
   )
 
   if (index === -1) {
@@ -575,29 +689,15 @@ export const updateVehicle = async (
     ...vehicleData,
   }
 
-  const images = getImagePaths(
-    vehicles[index].make,
-    vehicles[index].model
-  )
-
-  vehicles[index].image = images.image
-  vehicles[index].gallery = images.gallery
-
   return vehicles[index]
 }
 
-
 export const deleteVehicle = async (id) => {
-  const initialLength =
-    vehicles.length
+  const initialLength = vehicles.length
 
   vehicles = vehicles.filter(
-    (vehicle) =>
-      vehicle.id !== Number(id)
+    (vehicle) => vehicle.id !== Number(id)
   )
 
-  return (
-    vehicles.length <
-    initialLength
-  )
+  return vehicles.length < initialLength
 }
