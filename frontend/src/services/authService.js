@@ -4,3 +4,12 @@ export const registerUser = async (userData) => {
     user: userData,
   }
 }
+
+export const loginUser = async (credentials) => {
+  return {
+    success: true,
+    user: {
+      email: credentials.email,
+    },
+  }
+}
