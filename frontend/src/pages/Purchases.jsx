@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './Purchases.css'
 
 function Purchases() {
   const purchases = JSON.parse(
@@ -6,78 +7,134 @@ function Purchases() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10">
-      <div className="mx-auto max-w-6xl">
+    <div className="purchases-page">
+      <div className="purchases-container">
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            My Purchases
-          </h1>
+        <div className="purchases-header">
+          <div>
+            <span className="purchases-label">YOUR GARAGE</span>
+            <h1>My Purchases</h1>
+            <p>View and manage the vehicles you have purchased.</p>
+          </div>
 
-          <p className="mt-2 text-gray-600">
-            View your purchased vehicles.
-          </p>
+          <Link to="/" className="browse-btn">
+            Browse Inventory
+          </Link>
         </div>
 
         {purchases.length === 0 ? (
-          <div className="rounded-xl bg-white p-10 text-center shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900">
-              No purchases yet
-            </h2>
+          <div className="empty-purchases">
+            <div className="empty-icon">🚗</div>
 
-            <p className="mt-2 text-gray-500">
+            <h2>No purchases yet</h2>
+
+            <p>
               You haven't purchased any vehicles yet.
+              Explore our inventory and find your perfect car.
             </p>
 
-            <Link
-              to="/"
-              className="mt-6 inline-block rounded-lg bg-black px-5 py-3 font-semibold text-white hover:bg-gray-800"
-            >
-              Browse Inventory
+            <Link to="/" className="empty-btn">
+              Explore Inventory
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {purchases.map((purchase, index) => (
-              <div
-                key={purchase.id || index}
-                className="overflow-hidden rounded-xl bg-white shadow-sm"
-              >
+          <>
+            <div className="purchase-count">
+              {purchases.length} {purchases.length === 1 ? 'Vehicle' : 'Vehicles'} Purchased
+            </div>
 
-                {purchase.image && (
-                  <img
-                    src={purchase.image}
-                    alt={purchase.name || 'Vehicle'}
-                    className="h-52 w-full object-cover"
-                  />
-                )}
+            <div className="purchase-grid">
+              {purchases.map((purchase, index) => (
+                <div
+                  className="purchase-card"
+                  key={purchase.id || index}
+                >
+                  <div className="purchase-image">
+                    {purchase.image ? (
+                      <img
+                        src={purchase.image}
+                        alt={purchase.name || 'Vehicle'}
+                      />
+                    ) : (
+                      <div className="no-image">
+                        🚗
+                      </div>
+                    )}
 
-                <div className="p-5">
+                    <span className="success-badge">
+                      ✓ Purchased
+                    </span>
+                  </div>
 
-                  <h2 className="text-xl font-bold text-gray-900">
-                    {purchase.name || 'Vehicle'}
-                  </h2>
+                  <div className="purchase-content">
 
-                  {purchase.price && (
-                    <p className="mt-2 text-lg font-semibold text-gray-900">
-                      ₹{purchase.price}
-                    </p>
-                  )}
+                    <div className="vehicle-title-row">
+                      <div>
+                        <span className="vehicle-label">
+                          VEHICLE
+                        </span>
 
-                  <p className="mt-3 font-medium text-green-600">
-                    ✓ Purchase successful
-                  </p>
+                        <h2>
+                          {purchase.name || 'Vehicle'}
+                        </h2>
+                      </div>
 
-                  {purchase.date && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      Purchased on: {purchase.date}
-                    </p>
-                  )}
+                      {purchase.price && (
+                        <strong className="vehicle-price">
+                          ₹{Number(purchase.price).toLocaleString('en-IN')}
+                        </strong>
+                      )}
+                    </div>
 
+                    <div className="vehicle-details">
+
+                      {purchase.brand && (
+                        <div>
+                          <span>Brand</span>
+                          <strong>{purchase.brand}</strong>
+                        </div>
+                      )}
+
+                      {purchase.year && (
+                        <div>
+                          <span>Year</span>
+                          <strong>{purchase.year}</strong>
+                        </div>
+                      )}
+
+                      {purchase.fuelType && (
+                        <div>
+                          <span>Fuel</span>
+                          <strong>{purchase.fuelType}</strong>
+                        </div>
+                      )}
+
+                      {purchase.transmission && (
+                        <div>
+                          <span>Transmission</span>
+                          <strong>{purchase.transmission}</strong>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {purchase.date && (
+                      <div className="purchase-date">
+                        <span>Purchase Date</span>
+                        <strong>{purchase.date}</strong>
+                      </div>
+                    )}
+
+                    <div className="purchase-status">
+                      <span className="status-dot"></span>
+                      Purchase completed successfully
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
 
       </div>

@@ -1,7 +1,7 @@
-
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerUser } from '../services/authService'
+import './Register.css'
 
 function Register() {
   const navigate = useNavigate()
@@ -70,108 +70,129 @@ function Register() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-73px)] items-center justify-center bg-gray-100 px-6 py-10">
+    <div className="register-page">
 
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm">
+      <div className="register-card">
 
-        <h1 className="text-3xl font-bold text-gray-900">
-          Create Account
-        </h1>
+        {/* HEADER */}
+        <div className="register-header">
+          <div className="register-logo">
+            AV
+          </div>
 
-        <p className="mt-2 text-gray-600">
-          Create your AutoVault account.
-        </p>
+          <span className="register-label">
+            AUTOVAULT
+          </span>
 
+          <h1>Create Account</h1>
+
+          <p>
+            Create your AutoVault account.
+          </p>
+        </div>
+
+        {/* ERROR */}
         {error && (
-          <div className="mt-5 rounded-lg bg-red-50 p-3 text-sm font-medium text-red-600">
+          <div className="register-error">
             {error}
           </div>
         )}
 
+        {/* FORM */}
         <form
           onSubmit={handleSubmit}
-          className="mt-6 space-y-5"
+          className="register-form"
         >
 
-          <div>
-            <label className="mb-2 block font-medium text-gray-700">
+          {/* NAME */}
+          <div className="register-field">
+            <label htmlFor="name">
               Full Name
             </label>
 
             <input
+              id="name"
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+              placeholder="Enter your full name"
+              autoComplete="name"
             />
           </div>
 
-          <div>
-            <label className="mb-2 block font-medium text-gray-700">
-              Email
+          {/* EMAIL */}
+          <div className="register-field">
+            <label htmlFor="email">
+              Email Address
             </label>
 
             <input
+              id="email"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+              placeholder="Enter your email address"
+              autoComplete="email"
             />
           </div>
 
-          <div>
-            <label className="mb-2 block font-medium text-gray-700">
+          {/* PASSWORD */}
+          <div className="register-field">
+            <label htmlFor="password">
               Password
             </label>
 
             <input
+              id="password"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Minimum 6 characters"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+              autoComplete="new-password"
             />
           </div>
 
-          <div>
-            <label className="mb-2 block font-medium text-gray-700">
+          {/* CONFIRM PASSWORD */}
+          <div className="register-field">
+            <label htmlFor="confirmPassword">
               Confirm Password
             </label>
 
             <input
+              id="confirmPassword"
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="Re-enter your password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+              autoComplete="new-password"
             />
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-black px-4 py-3 font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
+            className="register-button"
           >
-            {loading ? 'Creating Account...' : 'Register'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
 
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-semibold text-black hover:underline"
-          >
+        {/* LOGIN */}
+        <div className="register-footer">
+          <span>
+            Already have an account?
+          </span>
+
+          <Link to="/login">
             Login
           </Link>
-        </p>
+        </div>
 
       </div>
 

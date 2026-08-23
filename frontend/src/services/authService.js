@@ -1,96 +1,84 @@
-const USERS_KEY = 'autovault_users'
+const API_URL = 'http://localhost:5000/api'
+
+const TOKEN_KEY = 'autovault_token'
 const CURRENT_USER_KEY = 'autovault_current_user'
 
 export const registerUser = async (userData) => {
-  const users = JSON.parse(
-    localStorage.getItem(USERS_KEY) || '[]'
-  )
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+      }),
+    })
 
-  const existingUser = users.find(
-    (user) => user.email.toLowerCase() === userData.email.toLowerCase()
-  )
+    const data = await response.json()
 
-  if (existingUser) {
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Registration failed',
+      }
+    }
+
+    localStorage.setItem(TOKEN_KEY, data.token)
+    localStorage.setItem(
+      CURRENT_USER_KEY,
+      JSON.stringify(data.user)
+    )
+
+    return data
+  } catch (error) {
+    console.error('Registration error:', error)
+
     return {
       success: false,
-      message: 'User already exists',
+      message: 'Unable to connect to server',
     }
-  }
-
-  const newUser = {
-    id: Date.now(),
-    name: userData.name,
-    email: userData.email,
-    password: userData.password,
-    role: 'user',
-  }
-
-  users.push(newUser)
-
-  localStorage.setItem(
-    USERS_KEY,
-    JSON.stringify(users)
-  )
-
-  return {
-    success: true,
-    user: newUser,
   }
 }
 
 export const loginUser = async (credentials) => {
-  const email = credentials.email.trim().toLowerCase()
-  const password = credentials.password
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+      }),
+    })
 
-  // ADMIN LOGIN
-  if (
-    email === 'admin@autovault.com' &&
-    password === 'admin123'
-  ) {
-    const adminUser = {
-      id: 1,
-      name: 'AutoVault Admin',
-      email: 'admin@autovault.com',
-      role: 'admin',
+    const data = await response.json()
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Invalid email or password',
+      }
     }
 
+    localStorage.setItem(TOKEN_KEY, data.token)
     localStorage.setItem(
       CURRENT_USER_KEY,
-      JSON.stringify(adminUser)
+      JSON.stringify(data.user)
     )
 
-    return {
-      success: true,
-      user: adminUser,
-    }
-  }
+    return data
+  } catch (error) {
+    console.error('Login error:', error)
 
-  // NORMAL USER LOGIN
-  const users = JSON.parse(
-    localStorage.getItem(USERS_KEY) || '[]'
-  )
-
-  const user = users.find(
-    (item) =>
-      item.email.toLowerCase() === email &&
-      item.password === password
-  )
-
-  if (!user) {
     return {
       success: false,
-      message: 'Invalid email or password',
+      message: 'Unable to connect to server',
     }
-  }
-
-  localStorage.setItem(
-    CURRENT_USER_KEY,
-    JSON.stringify(user)
-  )
-
-  return {
-    success: true,
-    user,
   }
 }
 
@@ -103,9 +91,28 @@ export const getCurrentUser = () => {
     return null
   }
 
-  return JSON.parse(currentUser)
+  try {
+    return JSON.parse(currentUser)
+  } catch {
+    return null
+  }
+}
+
+export const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY)
 }
 
 export const logoutUser = () => {
+  localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(CURRENT_USER_KEY)
+}
+
+export const getAuthHeaders = () => {
+  const token = getToken()
+
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {}
 }

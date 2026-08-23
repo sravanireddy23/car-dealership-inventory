@@ -1,0 +1,437 @@
+/* =========================================
+   DASHBOARD PAGE
+========================================= */
+
+.dashboard-page {
+  width: 100%;
+  min-height: calc(100vh - 70px);
+  background: #f5f6f8;
+  padding: 42px 0 70px;
+  color: #101828;
+}
+
+.dashboard-hero,
+.inventory-section {
+  width: min(1280px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+/* =========================================
+   HERO
+========================================= */
+
+.dashboard-hero {
+  margin-bottom: 42px;
+}
+
+.hero-content {
+  margin-bottom: 28px;
+}
+
+.hero-label,
+.inventory-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+}
+
+.hero-content h1 {
+  margin: 0;
+  color: #101828;
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -1.2px;
+}
+
+.hero-content p {
+  margin: 12px 0 0;
+  max-width: 650px;
+  color: #667085;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   FILTER PANEL
+========================================= */
+
+.filter-panel {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e4e7ec;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(16, 24, 40, 0.05);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filter-field label {
+  color: #344054;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  height: 46px;
+  box-sizing: border-box;
+  padding: 0 13px;
+  border: 1px solid #d0d5dd;
+  border-radius: 9px;
+  background: white;
+  color: #101828;
+  font-size: 14px;
+  outline: none;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  border-color: #101828;
+  box-shadow: 0 0 0 3px rgba(16, 24, 40, 0.06);
+}
+
+/* =========================================
+   INVENTORY HEADER
+========================================= */
+
+.inventory-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.inventory-heading h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.vehicle-count {
+  color: #667085;
+  font-size: 14px;
+}
+
+/* =========================================
+   VEHICLE GRID
+========================================= */
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* =========================================
+   VEHICLE CARD
+========================================= */
+
+.vehicle-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e4e7ec;
+  border-radius: 17px;
+  box-shadow: 0 3px 12px rgba(16, 24, 40, 0.05);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.1);
+}
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.vehicle-image-container {
+  position: relative;
+  width: 100%;
+  height: 225px;
+  overflow: hidden;
+  background: #eef0f2;
+  flex-shrink: 0;
+}
+
+.vehicle-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.vehicle-card:hover .vehicle-image {
+  transform: scale(1.04);
+}
+
+/* =========================================
+   BADGES
+========================================= */
+
+.condition-badge,
+.fuel-badge {
+  position: absolute;
+  top: 14px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.condition-badge {
+  left: 14px;
+  color: white;
+}
+
+.condition-badge.new {
+  background: #12b76a;
+}
+
+.condition-badge.used {
+  background: #101828;
+}
+
+.fuel-badge {
+  right: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #344054;
+  backdrop-filter: blur(6px);
+}
+
+/* =========================================
+   CARD CONTENT
+========================================= */
+
+.vehicle-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.vehicle-heading h3 {
+  margin: 0;
+  color: #101828;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.vehicle-heading p {
+  margin: 5px 0 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+.vehicle-price {
+  margin-top: 15px;
+  color: #101828;
+  font-size: 25px;
+  font-weight: 750;
+}
+
+/* =========================================
+   SPECS
+========================================= */
+
+.vehicle-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 17px;
+  border-top: 1px solid #eaecf0;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.spec-item span {
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+.spec-item strong {
+  color: #344054;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================================
+   COLORS
+========================================= */
+
+.colors-section {
+  margin-top: 18px;
+}
+
+.colors-section > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #98a2b3;
+  font-size: 11px;
+}
+
+.color-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.color-tag {
+  padding: 4px 8px;
+  border: 1px solid #d0d5dd;
+  border-radius: 20px;
+  background: #f9fafb;
+  color: #475467;
+  font-size: 11px;
+}
+
+.color-tag.active {
+  border-color: #101828;
+  background: #101828;
+  color: white;
+}
+
+/* =========================================
+   LOCATION
+========================================= */
+
+.vehicle-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 17px;
+  color: #667085;
+  font-size: 13px;
+}
+
+/* =========================================
+   DETAILS BUTTON
+========================================= */
+
+.details-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  margin-top: 18px;
+  border-radius: 9px;
+  background: #101828;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 650;
+  transition: background 0.2s ease;
+}
+
+.details-button:hover {
+  background: #1d2939;
+}
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.empty-inventory {
+  padding: 60px 20px;
+  border: 1px dashed #d0d5dd;
+  border-radius: 16px;
+  background: white;
+  text-align: center;
+}
+
+.empty-inventory h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.empty-inventory p {
+  margin: 0;
+  color: #667085;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.dashboard-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #667085;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+  .dashboard-hero,
+  .inventory-section {
+    width: min(100% - 50px, 900px);
+  }
+
+  .vehicle-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-page {
+    padding-top: 28px;
+  }
+
+  .dashboard-hero,
+  .inventory-section {
+    width: calc(100% - 32px);
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .filter-panel {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .vehicle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-heading {
+    align-items: flex-start;
+  }
+
+  .vehicle-image-container {
+    height: 220px;
+  }
+}

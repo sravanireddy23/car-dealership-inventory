@@ -4,7 +4,6 @@ import { useState } from 'react'
 function Purchase() {
   const location = useLocation()
   const navigate = useNavigate()
-
   const vehicle = location.state?.vehicle
 
   const [formData, setFormData] = useState({
@@ -16,46 +15,18 @@ function Purchase() {
 
   const [error, setError] = useState('')
 
-  // If no vehicle was selected
-  if (!vehicle) {
-    return (
-      <div className="min-h-screen bg-gray-100 px-6 py-10">
-        <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 text-center shadow">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Vehicle Not Found
-          </h1>
+  const handleChange = (e) => {
+    const { name, value } = e.target
 
-          <p className="mt-2 text-gray-600">
-            Please select a vehicle from the inventory first.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="mt-6 rounded-lg bg-black px-6 py-3 font-semibold text-white hover:bg-gray-800"
-          >
-            Back to Inventory
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  // Handle input changes
-  const handleChange = (event) => {
-    const { name, value } = event.target
-
-    setFormData((previous) => ({
-      ...previous,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }))
   }
 
-  // Handle purchase
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
-    // Validate form
     if (
       !formData.name.trim() ||
       !formData.email.trim() ||
@@ -68,12 +39,10 @@ function Purchase() {
 
     setError('')
 
-    // Get previous purchases
     const existingPurchases = JSON.parse(
       localStorage.getItem('purchases') || '[]'
     )
 
-    // Create new purchase
     const newPurchase = {
       id: vehicle.id,
       name: vehicle.name,
@@ -92,191 +61,465 @@ function Purchase() {
       date: new Date().toLocaleString(),
     }
 
-    // Save purchase
     localStorage.setItem(
       'purchases',
-      JSON.stringify([
-        ...existingPurchases,
-        newPurchase,
-      ])
+      JSON.stringify([...existingPurchases, newPurchase])
     )
 
-    // Show success message
     alert('Vehicle purchased successfully!')
 
-    // Go to purchases page
     navigate('/purchases')
   }
 
-  return (
-    <div className="min-h-screen bg-gray-100 px-6 py-10">
-      <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
+  if (!vehicle) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: '#f4f5f7',
+          padding: '50px 24px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+        }}
+      >
+        <div
+          style={{
+            background: '#fff',
+            width: '100%',
+            maxWidth: '600px',
+            padding: '40px',
+            borderRadius: '16px',
+            textAlign: 'center',
+            boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
+          }}
+        >
+          <h1>Vehicle Not Found</h1>
 
-        {/* VEHICLE INFORMATION */}
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-
-          {vehicle.image && (
-            <img
-              src={vehicle.image}
-              alt={vehicle.name}
-              className="mb-6 h-72 w-full rounded-lg object-cover"
-            />
-          )}
-
-          <h1 className="text-3xl font-bold text-gray-900">
-            {vehicle.name}
-          </h1>
-
-          <p className="mt-3 text-2xl font-bold text-gray-900">
-            ₹{vehicle.price}
+          <p style={{ color: '#666', marginBottom: '25px' }}>
+            Please select a vehicle from the inventory first.
           </p>
-
-          {vehicle.brand && (
-            <p className="mt-6 text-gray-600">
-              <span className="font-semibold text-gray-900">
-                Brand:
-              </span>{' '}
-              {vehicle.brand}
-            </p>
-          )}
-
-          {vehicle.year && (
-            <p className="mt-3 text-gray-600">
-              <span className="font-semibold text-gray-900">
-                Year:
-              </span>{' '}
-              {vehicle.year}
-            </p>
-          )}
-
-          {vehicle.fuelType && (
-            <p className="mt-3 text-gray-600">
-              <span className="font-semibold text-gray-900">
-                Fuel:
-              </span>{' '}
-              {vehicle.fuelType}
-            </p>
-          )}
-
-          {vehicle.transmission && (
-            <p className="mt-3 text-gray-600">
-              <span className="font-semibold text-gray-900">
-                Transmission:
-              </span>{' '}
-              {vehicle.transmission}
-            </p>
-          )}
 
           <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="mt-8 w-full rounded-lg border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100"
+            onClick={() => navigate('/')}
+            style={{
+              background: '#111',
+              color: '#fff',
+              border: 'none',
+              padding: '13px 25px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: 'pointer',
+            }}
           >
-            Back
+            Back to Inventory
           </button>
+        </div>
+      </div>
+    )
+  }
 
+  const inputStyle = {
+    width: '100%',
+    height: '48px',
+    padding: '0 14px',
+    boxSizing: 'border-box',
+    border: '1px solid #d5d7db',
+    borderRadius: '8px',
+    fontSize: '14px',
+    outline: 'none',
+    background: '#fff',
+  }
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: '7px',
+    fontSize: '13px',
+    fontWeight: '600',
+    color: '#374151',
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: 'calc(100vh - 73px)',
+        background: '#f4f5f7',
+        padding: '35px 24px 50px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1150px',
+          margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '28px',
+          alignItems: 'stretch',
+        }}
+      >
+
+        {/* ================= VEHICLE ================= */}
+
+        <div
+          style={{
+            background: '#ffffff',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 6px 25px rgba(0,0,0,0.06)',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '280px',
+              background: '#e5e7eb',
+              overflow: 'hidden',
+            }}
+          >
+            {vehicle.image ? (
+              <img
+                src={vehicle.image}
+                alt={vehicle.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#777',
+                }}
+              >
+                No Image Available
+              </div>
+            )}
+          </div>
+
+          <div style={{ padding: '28px' }}>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                gap: '20px',
+                paddingBottom: '20px',
+                borderBottom: '1px solid #eee',
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    letterSpacing: '1.5px',
+                    color: '#777',
+                    marginBottom: '7px',
+                  }}
+                >
+                  VEHICLE DETAILS
+                </div>
+
+                <h1
+                  style={{
+                    margin: 0,
+                    fontSize: '26px',
+                    color: '#111827',
+                    fontWeight: '700',
+                  }}
+                >
+                  {vehicle.name}
+                </h1>
+              </div>
+
+              <div
+                style={{
+                  fontSize: '22px',
+                  fontWeight: '800',
+                  color: '#111827',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                ₹{Number(vehicle.price).toLocaleString('en-IN')}
+              </div>
+            </div>
+
+            {/* DETAILS GRID */}
+
+            <div
+              style={{
+                marginTop: '20px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                border: '1px solid #e5e7eb',
+                borderRadius: '10px',
+                overflow: 'hidden',
+              }}
+            >
+              {[
+                ['Brand', vehicle.brand],
+                ['Year', vehicle.year],
+                ['Fuel Type', vehicle.fuelType],
+                ['Transmission', vehicle.transmission],
+              ]
+                .filter((item) => item[1])
+                .map(([label, value], index) => (
+                  <div
+                    key={label}
+                    style={{
+                      padding: '15px',
+                      background: '#fafafa',
+                      borderBottom: '1px solid #e5e7eb',
+                      borderRight:
+                        index % 2 === 0
+                          ? '1px solid #e5e7eb'
+                          : 'none',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        color: '#777',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      {label}
+                    </div>
+
+                    <strong
+                      style={{
+                        fontSize: '14px',
+                        color: '#111827',
+                      }}
+                    >
+                      {value}
+                    </strong>
+                  </div>
+                ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              style={{
+                width: '100%',
+                marginTop: '25px',
+                height: '46px',
+                background: '#fff',
+                color: '#374151',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+              }}
+            >
+              ← Back to Inventory
+            </button>
+          </div>
         </div>
 
-        {/* PURCHASE FORM */}
-        <div className="rounded-xl bg-white p-6 shadow-sm">
+        {/* ================= PURCHASE FORM ================= */}
 
-          <h2 className="text-2xl font-bold text-gray-900">
-            Complete Your Purchase
-          </h2>
+        <div
+          style={{
+            background: '#ffffff',
+            borderRadius: '16px',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 6px 25px rgba(0,0,0,0.06)',
+            padding: '30px',
+          }}
+        >
+          <div
+            style={{
+              paddingBottom: '20px',
+              borderBottom: '1px solid #eee',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: '700',
+                letterSpacing: '1.5px',
+                color: '#777',
+                marginBottom: '7px',
+              }}
+            >
+              SECURE CHECKOUT
+            </div>
 
-          <p className="mt-2 text-gray-600">
-            Enter your details to purchase this vehicle.
-          </p>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: '26px',
+                color: '#111827',
+              }}
+            >
+              Complete Your Purchase
+            </h2>
+
+            <p
+              style={{
+                margin: '8px 0 0',
+                color: '#6b7280',
+                fontSize: '14px',
+              }}
+            >
+              Enter your details to complete your vehicle purchase.
+            </p>
+          </div>
 
           <form
             onSubmit={handleSubmit}
-            className="mt-6 space-y-5"
+            style={{
+              marginTop: '23px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '17px',
+            }}
           >
 
             {/* NAME */}
+
             <div>
-              <label className="mb-2 block font-medium text-gray-700">
+              <label htmlFor="name" style={labelStyle}>
                 Full Name
               </label>
 
               <input
+                id="name"
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+                style={inputStyle}
               />
             </div>
 
             {/* EMAIL */}
+
             <div>
-              <label className="mb-2 block font-medium text-gray-700">
-                Email
+              <label htmlFor="email" style={labelStyle}>
+                Email Address
               </label>
 
               <input
+                id="email"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your email"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+                placeholder="Enter your email address"
+                style={inputStyle}
               />
             </div>
 
             {/* PHONE */}
+
             <div>
-              <label className="mb-2 block font-medium text-gray-700">
+              <label htmlFor="phone" style={labelStyle}>
                 Phone Number
               </label>
 
               <input
+                id="phone"
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+                style={inputStyle}
               />
             </div>
 
             {/* ADDRESS */}
+
             <div>
-              <label className="mb-2 block font-medium text-gray-700">
-                Address
+              <label htmlFor="address" style={labelStyle}>
+                Delivery Address
               </label>
 
               <textarea
+                id="address"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                placeholder="Enter your address"
+                placeholder="Enter your complete address"
                 rows="4"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-black"
+                style={{
+                  ...inputStyle,
+                  height: '105px',
+                  padding: '13px 14px',
+                  resize: 'vertical',
+                }}
               />
             </div>
 
             {/* ERROR */}
+
             {error && (
-              <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-600">
+              <div
+                style={{
+                  background: '#fef2f2',
+                  color: '#dc2626',
+                  border: '1px solid #fecaca',
+                  borderRadius: '8px',
+                  padding: '12px 14px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                }}
+              >
                 {error}
-              </p>
+              </div>
             )}
 
-            {/* CONFIRM PURCHASE */}
+            {/* CONFIRM */}
+
             <button
               type="submit"
-              className="w-full rounded-lg bg-black px-4 py-3 font-semibold text-white hover:bg-gray-800"
+              style={{
+                width: '100%',
+                height: '48px',
+                background: '#111827',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                marginTop: '2px',
+              }}
             >
               Confirm Purchase
             </button>
 
             {/* CANCEL */}
+
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-100"
+              style={{
+                width: '100%',
+                height: '46px',
+                background: '#fff',
+                color: '#374151',
+                border: '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+              }}
             >
               Cancel
             </button>
@@ -290,4 +533,3 @@ function Purchase() {
 }
 
 export default Purchase
-
