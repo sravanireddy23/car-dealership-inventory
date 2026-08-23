@@ -7,23 +7,22 @@ export const registerUser = async (userData) => {
   )
 
   const existingUser = users.find(
-    (user) =>
-      user.email.toLowerCase() ===
-      userData.email.toLowerCase()
+    (user) => user.email.toLowerCase() === userData.email.toLowerCase()
   )
 
   if (existingUser) {
     return {
       success: false,
-      message: 'An account with this email already exists.',
+      message: 'User already exists',
     }
   }
 
   const newUser = {
     id: Date.now(),
     name: userData.name,
-    email: userData.email.toLowerCase(),
+    email: userData.email,
     password: userData.password,
+    role: 'user',
   }
 
   users.push(newUser)
@@ -33,75 +32,80 @@ export const registerUser = async (userData) => {
     JSON.stringify(users)
   )
 
-  localStorage.setItem(
-    CURRENT_USER_KEY,
-    JSON.stringify({
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-    })
-  )
-
   return {
     success: true,
-    user: {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-    },
+    user: newUser,
   }
 }
 
 export const loginUser = async (credentials) => {
+  const email = credentials.email.trim().toLowerCase()
+  const password = credentials.password
+
+  // ADMIN LOGIN
+  if (
+    email === 'admin@autovault.com' &&
+    password === 'admin123'
+  ) {
+    const adminUser = {
+      id: 1,
+      name: 'AutoVault Admin',
+      email: 'admin@autovault.com',
+      role: 'admin',
+    }
+
+    localStorage.setItem(
+      CURRENT_USER_KEY,
+      JSON.stringify(adminUser)
+    )
+
+    return {
+      success: true,
+      user: adminUser,
+    }
+  }
+
+  // NORMAL USER LOGIN
   const users = JSON.parse(
     localStorage.getItem(USERS_KEY) || '[]'
   )
 
   const user = users.find(
     (item) =>
-      item.email.toLowerCase() ===
-        credentials.email.toLowerCase() &&
-      item.password === credentials.password
+      item.email.toLowerCase() === email &&
+      item.password === password
   )
 
   if (!user) {
     return {
       success: false,
-      message: 'Invalid email or password.',
+      message: 'Invalid email or password',
     }
-  }
-
-  const currentUser = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
   }
 
   localStorage.setItem(
     CURRENT_USER_KEY,
-    JSON.stringify(currentUser)
+    JSON.stringify(user)
   )
 
   return {
     success: true,
-    user: currentUser,
+    user,
   }
+}
+
+export const getCurrentUser = () => {
+  const currentUser = localStorage.getItem(
+    CURRENT_USER_KEY
+  )
+
+  if (!currentUser) {
+    return null
+  }
+
+  return JSON.parse(currentUser)
 }
 
 export const logoutUser = () => {
   localStorage.removeItem(CURRENT_USER_KEY)
-}
-
-export const getCurrentUser = () => {
-  const user = localStorage.getItem(CURRENT_USER_KEY)
-
-  if (!user) {
-    return null
-  }
-
-  return JSON.parse(user)
-}
-
-export const isLoggedIn = () => {
-  return getCurrentUser() !== null
 }

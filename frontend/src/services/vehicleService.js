@@ -1,4 +1,13 @@
-let vehicles = [
+// ============================================================
+// vehicleService.js
+// AutoVault Vehicle Inventory Service
+// ============================================================
+
+// ------------------------------------------------------------
+// DEFAULT / ORIGINAL INVENTORY
+// ------------------------------------------------------------
+
+const defaultVehicles = [
   {
     id: 1,
     make: 'Hyundai',
@@ -608,29 +617,187 @@ let vehicles = [
   },
 ]
 
-export const getVehicles = async () => {
-  return vehicles
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
+
+const STORAGE_KEY = 'autovault_vehicles'
+
+// ------------------------------------------------------------
+// Load vehicles from localStorage
+// ------------------------------------------------------------
+
+function loadVehicles() {
+  try {
+    const savedVehicles =
+      localStorage.getItem(STORAGE_KEY)
+
+    // First installation
+    if (!savedVehicles) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(defaultVehicles)
+      )
+
+      return [...defaultVehicles]
+    }
+
+    const parsedVehicles =
+      JSON.parse(savedVehicles)
+
+    // Safety check
+    if (!Array.isArray(parsedVehicles)) {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(defaultVehicles)
+      )
+
+      return [...defaultVehicles]
+    }
+
+    return parsedVehicles
+  } catch (error) {
+    console.error(
+      'Unable to load vehicles:',
+      error
+    )
+
+    return [...defaultVehicles]
+  }
 }
 
+// ============================================================
+// VEHICLE STATE
+// ============================================================
+
+let vehicles = loadVehicles()
+
+// ============================================================
+// SAVE VEHICLES
+// ============================================================
+
+function saveVehicles() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(vehicles)
+    )
+  } catch (error) {
+    console.error(
+      'Unable to save vehicles:',
+      error
+    )
+  }
+}
+
+// ============================================================
+// NORMALIZE VEHICLE
+// ============================================================
+
+function normalizeVehicle(vehicle) {
+  const condition =
+    vehicle.condition === 'Used'
+      ? 'Used'
+      : 'New'
+
+  let odometer = Number(
+    vehicle.odometer
+  )
+
+  if (!Number.isFinite(odometer)) {
+    odometer = 0
+  }
+
+  // New cars should always show 0 km
+  if (condition === 'New') {
+    odometer = 0
+  }
+
+  const colors =
+    Array.isArray(vehicle.colors)
+      ? vehicle.colors
+      : vehicle.color
+        ? [vehicle.color]
+        : []
+
+  return {
+    ...vehicle,
+
+    condition,
+
+    odometer,
+
+    colors,
+
+    color:
+      vehicle.color ||
+      colors[0] ||
+      '',
+
+    location:
+      vehicle.location ||
+      'Hyderabad',
+
+    available:
+      vehicle.available !== false,
+
+    image:
+      vehicle.image ||
+      '/cars/default-car.png',
+
+    gallery:
+      Array.isArray(vehicle.gallery)
+        ? vehicle.gallery
+        : [],
+  }
+}
+
+// ============================================================
+// GET ALL VEHICLES
+// ============================================================
+
+export const getVehicles = async () => {
+  vehicles = loadVehicles()
+
+  return [...vehicles]
+}
+
+// ============================================================
+// GET VEHICLE BY ID
+// ============================================================
+
 export const getVehicleById = async (id) => {
+  vehicles = loadVehicles()
+
   return vehicles.find(
-    (vehicle) => vehicle.id === Number(id)
+    (vehicle) =>
+      vehicle.id === Number(id)
   )
 }
 
+// ============================================================
+// PURCHASE VEHICLE
+// ============================================================
+
 export const purchaseVehicle = async (id) => {
+  vehicles = loadVehicles()
+
   const vehicle = vehicles.find(
-    (item) => item.id === Number(id)
+    (item) =>
+      item.id === Number(id)
   )
 
   if (!vehicle || !vehicle.available) {
     return {
       success: false,
-      message: 'Vehicle is not available',
+      message:
+        'Vehicle is not available',
     }
   }
 
   vehicle.available = false
+
+  saveVehicles()
 
   return {
     success: true,
@@ -638,66 +805,261 @@ export const purchaseVehicle = async (id) => {
   }
 }
 
-export const addVehicle = async (vehicleData) => {
+// ============================================================
+// ADD VEHICLE
+// ============================================================
+
+export const addVehicle = async (
+  vehicleData
+) => {
+  vehicles = loadVehicles()
+
+  // ----------------------------------------------------------
+  // Generate a completely unique ID
+  // ----------------------------------------------------------
+
+  const maxId =
+    vehicles.length > 0
+      ? Math.max(
+          ...vehicles.map(
+            (vehicle) =>
+              Number(vehicle.id) || 0
+          )
+        )
+      : 0
+
+  const newId = maxId + 1
+
+  // ----------------------------------------------------------
+  // Normalize condition
+  // ----------------------------------------------------------
+
+  const condition =
+    vehicleData.condition === 'Used'
+      ? 'Used'
+      : 'New'
+
+  // ----------------------------------------------------------
+  // Odometer
+  // ----------------------------------------------------------
+
+  let odometer = Number(
+    vehicleData.odometer
+  )
+
+  if (!Number.isFinite(odometer)) {
+    odometer = 0
+  }
+
+  if (condition === 'New') {
+    odometer = 0
+  }
+
+  // ----------------------------------------------------------
+  // Colors
+  // ----------------------------------------------------------
+
+  const colors =
+    Array.isArray(vehicleData.colors)
+      ? vehicleData.colors
+      : vehicleData.color
+        ? [vehicleData.color]
+        : []
+
+  // ----------------------------------------------------------
+  // Image
+  // ----------------------------------------------------------
+
+  const image =
+    vehicleData.image ||
+    '/cars/default-car.png'
+
+  // ----------------------------------------------------------
+  // Gallery
+  // ----------------------------------------------------------
+
+  const gallery =
+    Array.isArray(vehicleData.gallery)
+      ? vehicleData.gallery
+      : image
+        ? [image]
+        : []
+
+  // ----------------------------------------------------------
+  // Create vehicle
+  // ----------------------------------------------------------
+
   const newVehicle = {
     ...vehicleData,
 
-    id:
-      vehicles.length > 0
-        ? Math.max(
-            ...vehicles.map((vehicle) => vehicle.id)
-          ) + 1
-        : 1,
+    id: newId,
 
-    colors:
-      vehicleData.colors ||
-      (vehicleData.color
-        ? [vehicleData.color]
-        : []),
+    make:
+      vehicleData.make || '',
+
+    model:
+      vehicleData.model || '',
+
+    year:
+      Number(vehicleData.year) || 0,
+
+    price:
+      Number(vehicleData.price) || 0,
+
+    condition,
+
+    odometer,
+
+    mileage:
+      vehicleData.mileage || '',
+
+    fuelType:
+      vehicleData.fuelType ||
+      'Petrol',
+
+    transmission:
+      vehicleData.transmission ||
+      'Automatic',
+
+    bodyType:
+      vehicleData.bodyType ||
+      'SUV',
+
+    colors,
+
+    color:
+      vehicleData.color ||
+      colors[0] ||
+      '',
+
+    location:
+      vehicleData.location ||
+      'Hyderabad',
 
     available: true,
 
-    image:
-      vehicleData.image ||
-      `/cars/${vehicleData.model
-        .toLowerCase()
-        .replace(/\s+/g, '-')}/1.png`,
+    image,
 
-    gallery:
-      vehicleData.gallery || [],
+    gallery,
   }
+
+  // ----------------------------------------------------------
+  // Add ONCE
+  // ----------------------------------------------------------
 
   vehicles.push(newVehicle)
 
-  return newVehicle
+  // ----------------------------------------------------------
+  // Save immediately
+  // ----------------------------------------------------------
+
+  saveVehicles()
+
+  // Return a copy
+  return {
+    ...newVehicle,
+  }
 }
+
+// ============================================================
+// UPDATE VEHICLE
+// ============================================================
 
 export const updateVehicle = async (
   id,
   vehicleData
 ) => {
-  const index = vehicles.findIndex(
-    (vehicle) => vehicle.id === Number(id)
-  )
+  vehicles = loadVehicles()
+
+  const numericId = Number(id)
+
+  const index =
+    vehicles.findIndex(
+      (vehicle) =>
+        vehicle.id === numericId
+    )
 
   if (index === -1) {
     return null
   }
 
-  vehicles[index] = {
-    ...vehicles[index],
-    ...vehicleData,
+  const existingVehicle =
+    vehicles[index]
+
+  const mergedVehicle =
+    normalizeVehicle({
+      ...existingVehicle,
+      ...vehicleData,
+
+      id: existingVehicle.id,
+
+      // Never accidentally reset availability
+      available:
+        vehicleData.available ??
+        existingVehicle.available,
+    })
+
+  vehicles[index] =
+    mergedVehicle
+
+  saveVehicles()
+
+  return {
+    ...mergedVehicle,
+  }
+}
+
+// ============================================================
+// DELETE VEHICLE
+// ============================================================
+
+export const deleteVehicle = async (
+  id
+) => {
+  vehicles = loadVehicles()
+
+  const numericId = Number(id)
+
+  const initialLength =
+    vehicles.length
+
+  vehicles =
+    vehicles.filter(
+      (vehicle) =>
+        vehicle.id !== numericId
+    )
+
+  const deleted =
+    vehicles.length <
+    initialLength
+
+  if (deleted) {
+    saveVehicles()
   }
 
-  return vehicles[index]
+  return deleted
 }
 
-export const deleteVehicle = async (id) => {
-  const initialLength = vehicles.length
+// ============================================================
+// OPTIONAL: RESET INVENTORY
+// ============================================================
+// Use this only if you want to completely remove all
+// locally-added vehicles and restore the original 20.
+//
+// You can call:
+// resetVehicleInventory()
+// from the browser console if needed.
+// ============================================================
 
-  vehicles = vehicles.filter(
-    (vehicle) => vehicle.id !== Number(id)
-  )
+export const resetVehicleInventory =
+  async () => {
+    vehicles = [
+      ...defaultVehicles,
+    ]
 
-  return vehicles.length < initialLength
-}
+    saveVehicles()
+
+    return [
+      ...vehicles,
+    ]
+  }
