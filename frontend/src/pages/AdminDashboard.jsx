@@ -14,8 +14,14 @@ import './AdminDashboard.css'
 
 function AdminDashboard() {
   const navigate = useNavigate()
+  const fileInputRef = useRef(null)
 
   const [vehicles, setVehicles] = useState([])
+  const [editingId, setEditingId] = useState(null)
+  const [message, setMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [imagePreview, setImagePreview] = useState('')
+  const [dragActive, setDragActive] = useState(false)
 
   const [formData, setFormData] = useState({
     make: '',
@@ -32,13 +38,9 @@ function AdminDashboard() {
     image: '',
   })
 
-  const [editingId, setEditingId] = useState(null)
-  const [message, setMessage] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [imagePreview, setImagePreview] = useState('')
-  const [dragActive, setDragActive] = useState(false)
-
-  const fileInputRef = useRef(null)
+  // ============================================================
+  // LOAD VEHICLES
+  // ============================================================
 
   useEffect(() => {
     loadVehicles()
@@ -47,14 +49,32 @@ function AdminDashboard() {
   const loadVehicles = async () => {
     try {
       const data = await getVehicles()
+
+      console.log('Vehicles received:', data)
+
       setVehicles(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Unable to load vehicles:', error)
       setVehicles([])
+      showMessage('Unable to load vehicles')
     }
   }
 
-  /* ================= LOGOUT ================= */
+  // ============================================================
+  // MESSAGE
+  // ============================================================
+
+  const showMessage = (text) => {
+    setMessage(text)
+
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
 
   const handleLogout = () => {
     const confirmed = window.confirm(
@@ -70,7 +90,9 @@ function AdminDashboard() {
     })
   }
 
-  /* ================= FORM ================= */
+  // ============================================================
+  // FORM CHANGE
+  // ============================================================
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -96,7 +118,9 @@ function AdminDashboard() {
     }))
   }
 
-  /* ================= IMAGE ================= */
+  // ============================================================
+  // IMAGE
+  // ============================================================
 
   const processImage = (file) => {
     if (!file) return
@@ -138,7 +162,9 @@ function AdminDashboard() {
     processImage(event.dataTransfer.files?.[0])
   }
 
-  /* ================= RESET ================= */
+  // ============================================================
+  // RESET FORM
+  // ============================================================
 
   const resetForm = () => {
     setFormData({
@@ -164,21 +190,16 @@ function AdminDashboard() {
     }
   }
 
-  const showMessage = (text) => {
-    setMessage(text)
-
-    setTimeout(() => {
-      setMessage('')
-    }, 3000)
-  }
-
-  /* ================= ADD / UPDATE ================= */
+  // ============================================================
+  // SUBMIT ADD / UPDATE
+  // ============================================================
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     if (submitting) return
 
+    // Validation
     if (!formData.make.trim()) {
       showMessage('Please enter vehicle make')
       return
@@ -219,8 +240,11 @@ function AdminDashboard() {
       const vehicleData = {
         make: formData.make.trim(),
         model: formData.model.trim(),
+        category: formData.bodyType || 'SUV',
+
         year: Number(formData.year),
         price: Number(formData.price),
+
         condition: formData.condition,
 
         odometer:
@@ -229,18 +253,37 @@ function AdminDashboard() {
             : Number(formData.odometer),
 
         mileage: formData.mileage.trim(),
+
         fuelType: formData.fuelType,
         transmission: formData.transmission,
         bodyType: formData.bodyType,
+
         location:
           formData.location.trim() || 'Hyderabad',
 
         image: formData.image || '',
+
+        quantity: 1,
       }
 
-      /* UPDATE */
+      if (editingId) {
+        console.log(
+        'Updating vehicle:',
+        editingId,
+        vehicleData
+      )
+      } else {
+        console.log(
+        'Adding vehicle:',
+        vehicleData
+      )
+    }
 
-      if (editingId !== null) {
+      // ========================================================
+      // UPDATE
+      // ========================================================
+
+      if (editingId) {
         const updatedVehicle = await updateVehicle(
           editingId,
           vehicleData
@@ -251,6 +294,11 @@ function AdminDashboard() {
           return
         }
 
+        console.log(
+          'Vehicle updated successfully:',
+          updatedVehicle
+        )
+
         await loadVehicles()
 
         showMessage('Vehicle updated successfully')
@@ -260,7 +308,9 @@ function AdminDashboard() {
         return
       }
 
-      /* ADD */
+      // ========================================================
+      // ADD
+      // ========================================================
 
       const newVehicle = await addVehicle(vehicleData)
 
@@ -268,6 +318,11 @@ function AdminDashboard() {
         showMessage('Vehicle could not be added')
         return
       }
+
+      console.log(
+        'Vehicle added successfully:',
+        newVehicle
+      )
 
       await loadVehicles()
 
@@ -281,35 +336,74 @@ function AdminDashboard() {
       )
 
       showMessage(
-        'Something went wrong. Please try again.'
+        error.message ||
+          'Something went wrong. Please try again.'
       )
     } finally {
       setSubmitting(false)
     }
   }
 
-  /* ================= EDIT ================= */
+  // ============================================================
+  // EDIT VEHICLE
+  // ============================================================
 
   const handleEdit = (vehicle) => {
-    setEditingId(vehicle.id)
+    console.log('Editing vehicle:', vehicle)
+
+    // IMPORTANT:
+    // MongoDB uses _id, NOT id
+    const mongoId = vehicle._id
+
+    if (!mongoId) {
+      console.error(
+        'Vehicle does not contain MongoDB _id:',
+        vehicle
+      )
+
+      showMessage('Vehicle ID is missing')
+      return
+    }
+
+    setEditingId(mongoId)
 
     setFormData({
       make: vehicle.make || '',
       model: vehicle.model || '',
       year: String(vehicle.year || ''),
       price: String(vehicle.price || ''),
-      condition: vehicle.condition || 'New',
-      odometer: String(vehicle.odometer ?? 0),
-      mileage: String(vehicle.mileage || ''),
-      fuelType: vehicle.fuelType || 'Petrol',
+
+      condition:
+        vehicle.condition === 'Used'
+          ? 'Used'
+          : 'New',
+
+      odometer: String(
+        vehicle.odometer ?? 0
+      ),
+
+      mileage:
+        vehicle.mileage || '',
+
+      fuelType:
+        vehicle.fuelType || 'Petrol',
+
       transmission:
         vehicle.transmission || 'Automatic',
-      bodyType: vehicle.bodyType || 'SUV',
-      location: vehicle.location || 'Hyderabad',
-      image: vehicle.image || '',
+
+      bodyType:
+        vehicle.bodyType || 'SUV',
+
+      location:
+        vehicle.location || 'Hyderabad',
+
+      image:
+        vehicle.image || '',
     })
 
-    setImagePreview(vehicle.image || '')
+    setImagePreview(
+      vehicle.image || ''
+    )
 
     window.scrollTo({
       top: 0,
@@ -317,9 +411,16 @@ function AdminDashboard() {
     })
   }
 
-  /* ================= DELETE ================= */
+  // ============================================================
+  // DELETE VEHICLE
+  // ============================================================
 
   const handleDelete = async (id) => {
+    if (!id) {
+      showMessage('Vehicle ID is missing')
+      return
+    }
+
     const confirmed = window.confirm(
       'Are you sure you want to delete this vehicle?'
     )
@@ -327,10 +428,18 @@ function AdminDashboard() {
     if (!confirmed) return
 
     try {
-      const deleted = await deleteVehicle(id)
+      console.log(
+        'Deleting vehicle:',
+        id
+      )
+
+      const deleted =
+        await deleteVehicle(id)
 
       if (!deleted) {
-        showMessage('Vehicle could not be deleted')
+        showMessage(
+          'Vehicle could not be deleted'
+        )
         return
       }
 
@@ -340,35 +449,53 @@ function AdminDashboard() {
         resetForm()
       }
 
-      showMessage('Vehicle deleted successfully')
+      showMessage(
+        'Vehicle deleted successfully'
+      )
     } catch (error) {
-      console.error('Delete failed:', error)
+      console.error(
+        'Delete failed:',
+        error
+      )
 
-      showMessage('Unable to delete vehicle')
+      showMessage(
+        error.message ||
+          'Unable to delete vehicle'
+      )
     }
   }
 
-  /* ================= STATISTICS ================= */
+  // ============================================================
+  // STATISTICS
+  // ============================================================
 
   const newCount = vehicles.filter(
-    (vehicle) => vehicle.condition === 'New'
+    (vehicle) =>
+      vehicle.condition === 'New'
   ).length
 
   const usedCount = vehicles.filter(
-    (vehicle) => vehicle.condition === 'Used'
+    (vehicle) =>
+      vehicle.condition === 'Used'
   ).length
 
-  const availableCount = vehicles.filter(
-    (vehicle) => vehicle.available !== false
-  ).length
+  const availableCount =
+    vehicles.filter(
+      (vehicle) =>
+        Number(vehicle.quantity ?? 1) > 0
+    ).length
 
-  /* ================= UI ================= */
+  // ============================================================
+  // UI
+  // ============================================================
 
   return (
     <main className="admin-page">
       <div className="admin-container">
 
-        {/* ================= HEADER ================= */}
+        {/* ======================================================
+            HEADER
+        ====================================================== */}
 
         <header className="admin-header">
 
@@ -377,18 +504,22 @@ function AdminDashboard() {
               AUTOVAULT MANAGEMENT
             </span>
 
-            <h1>Admin Dashboard</h1>
+            <h1>
+              Admin Dashboard
+            </h1>
 
             <p>
-              Manage your vehicle inventory, pricing
-              and availability.
+              Manage your vehicle inventory,
+              pricing and availability.
             </p>
           </div>
 
           <div className="admin-header-actions">
 
             <div className="admin-count-box">
-              <strong>{vehicles.length}</strong>
+              <strong>
+                {vehicles.length}
+              </strong>
 
               <span>
                 Total Vehicles
@@ -407,24 +538,31 @@ function AdminDashboard() {
 
         </header>
 
-        {/* ================= MESSAGE ================= */}
+        {/* ======================================================
+            MESSAGE
+        ====================================================== */}
 
         {message && (
           <div className="admin-message">
             <span>✓</span>
-
             {message}
           </div>
         )}
 
-        {/* ================= STATS ================= */}
+        {/* ======================================================
+            STATS
+        ====================================================== */}
 
         <section className="stats-grid">
 
           <div className="stat-card">
-            <span>Total Inventory</span>
+            <span>
+              Total Inventory
+            </span>
 
-            <strong>{vehicles.length}</strong>
+            <strong>
+              {vehicles.length}
+            </strong>
 
             <small>
               Vehicles listed
@@ -432,9 +570,13 @@ function AdminDashboard() {
           </div>
 
           <div className="stat-card">
-            <span>New Vehicles</span>
+            <span>
+              New Vehicles
+            </span>
 
-            <strong>{newCount}</strong>
+            <strong>
+              {newCount}
+            </strong>
 
             <small>
               Brand new cars
@@ -442,9 +584,13 @@ function AdminDashboard() {
           </div>
 
           <div className="stat-card">
-            <span>Used Vehicles</span>
+            <span>
+              Used Vehicles
+            </span>
 
-            <strong>{usedCount}</strong>
+            <strong>
+              {usedCount}
+            </strong>
 
             <small>
               Pre-owned cars
@@ -452,9 +598,13 @@ function AdminDashboard() {
           </div>
 
           <div className="stat-card">
-            <span>Available</span>
+            <span>
+              Available
+            </span>
 
-            <strong>{availableCount}</strong>
+            <strong>
+              {availableCount}
+            </strong>
 
             <small>
               Ready for purchase
@@ -463,7 +613,9 @@ function AdminDashboard() {
 
         </section>
 
-        {/* ================= FORM ================= */}
+        {/* ======================================================
+            FORM
+        ====================================================== */}
 
         <section className="admin-form-section">
 
@@ -472,20 +624,20 @@ function AdminDashboard() {
             <div>
 
               <span className="section-label">
-                {editingId !== null
+                {editingId
                   ? 'UPDATE INVENTORY'
                   : 'INVENTORY MANAGEMENT'}
               </span>
 
               <h2>
-                {editingId !== null
+                {editingId
                   ? 'Edit Vehicle'
                   : 'Add New Vehicle'}
               </h2>
 
             </div>
 
-            {editingId !== null && (
+            {editingId && (
               <button
                 type="button"
                 className="cancel-top-button"
@@ -501,6 +653,8 @@ function AdminDashboard() {
             className="vehicle-form"
             onSubmit={handleSubmit}
           >
+
+            {/* BASIC INFORMATION */}
 
             <div className="form-section-title">
               Basic Information
@@ -568,6 +722,8 @@ function AdminDashboard() {
                 required
               />
             </div>
+
+            {/* SPECIFICATIONS */}
 
             <div className="form-section-title">
               Vehicle Specifications
@@ -642,19 +798,19 @@ function AdminDashboard() {
                 value={formData.fuelType}
                 onChange={handleChange}
               >
-                <option>
+                <option value="Petrol">
                   Petrol
                 </option>
 
-                <option>
+                <option value="Diesel">
                   Diesel
                 </option>
 
-                <option>
+                <option value="Electric">
                   Electric
                 </option>
 
-                <option>
+                <option value="Hybrid">
                   Hybrid
                 </option>
               </select>
@@ -670,11 +826,11 @@ function AdminDashboard() {
                 value={formData.transmission}
                 onChange={handleChange}
               >
-                <option>
+                <option value="Automatic">
                   Automatic
                 </option>
 
-                <option>
+                <option value="Manual">
                   Manual
                 </option>
               </select>
@@ -690,23 +846,23 @@ function AdminDashboard() {
                 value={formData.bodyType}
                 onChange={handleChange}
               >
-                <option>
+                <option value="SUV">
                   SUV
                 </option>
 
-                <option>
+                <option value="Sedan">
                   Sedan
                 </option>
 
-                <option>
+                <option value="Hatchback">
                   Hatchback
                 </option>
 
-                <option>
+                <option value="Coupe">
                   Coupe
                 </option>
 
-                <option>
+                <option value="MPV">
                   MPV
                 </option>
               </select>
@@ -726,7 +882,7 @@ function AdminDashboard() {
               />
             </div>
 
-            {/* ================= IMAGE ================= */}
+            {/* IMAGE */}
 
             <div className="form-section-title">
               Vehicle Image
@@ -806,7 +962,6 @@ function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => {
-
                         setImagePreview('')
 
                         setFormData(
@@ -821,7 +976,6 @@ function AdminDashboard() {
                         ) {
                           fileInputRef.current.value = ''
                         }
-
                       }}
                     >
                       Remove image
@@ -835,7 +989,7 @@ function AdminDashboard() {
 
             </div>
 
-            {/* ================= ACTIONS ================= */}
+            {/* ACTIONS */}
 
             <div className="form-actions">
 
@@ -846,13 +1000,12 @@ function AdminDashboard() {
               >
                 {submitting
                   ? 'Saving...'
-                  : editingId !== null
+                  : editingId
                     ? 'Update Vehicle'
                     : 'Add Vehicle'}
               </button>
 
-              {editingId !== null && (
-
+              {editingId && (
                 <button
                   type="button"
                   className="secondary-button"
@@ -861,7 +1014,6 @@ function AdminDashboard() {
                 >
                   Cancel
                 </button>
-
               )}
 
             </div>
@@ -870,7 +1022,9 @@ function AdminDashboard() {
 
         </section>
 
-        {/* ================= INVENTORY ================= */}
+        {/* ======================================================
+            INVENTORY
+        ====================================================== */}
 
         <section className="management-section">
 
@@ -917,177 +1071,193 @@ function AdminDashboard() {
 
             <div className="admin-vehicle-grid">
 
-              {vehicles.map((vehicle) => (
+              {vehicles.map((vehicle) => {
 
-                <article
-                  className="admin-vehicle-card"
-                  key={vehicle.id}
-                >
+                // IMPORTANT:
+                // MongoDB ID
+                const vehicleId =
+                  vehicle._id
 
-                  <div className="admin-image-wrapper">
+                return (
+                  <article
+                    className="admin-vehicle-card"
+                    key={vehicleId}
+                  >
 
-                    <img
-                      src={
-                        vehicle.image ||
-                        '/cars/default-car.png'
-                      }
-                      alt={`${vehicle.make} ${vehicle.model}`}
-                      className="admin-vehicle-image"
-                      onError={(event) => {
+                    {/* IMAGE */}
 
-                        if (
-                          !event.currentTarget.src.includes(
-                            'default-car.png'
-                          )
-                        ) {
-                          event.currentTarget.src =
-                            '/cars/default-car.png'
+                    <div className="admin-image-wrapper">
+
+                      <img
+                        src={
+                          vehicle.image ||
+                          '/cars/default-car.png'
                         }
-
-                      }}
-                    />
-
-                    <span
-                      className={
-                        vehicle.condition === 'Used'
-                          ? 'condition-badge used'
-                          : 'condition-badge'
-                      }
-                    >
-                      {vehicle.condition ||
-                        'New'}
-                    </span>
-
-                    <span className="fuel-badge">
-                      {vehicle.fuelType ||
-                        'Petrol'}
-                    </span>
-
-                  </div>
-
-                  <div className="admin-card-content">
-
-                    <div className="vehicle-title-row">
-
-                      <div>
-
-                        <h3>
-                          {vehicle.make}{' '}
-                          {vehicle.model}
-                        </h3>
-
-                        <p className="vehicle-year">
-                          {vehicle.year} ·{' '}
-                          {vehicle.bodyType ||
-                            'Vehicle'}
-                        </p>
-
-                      </div>
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        className="admin-vehicle-image"
+                        onError={(event) => {
+                          if (
+                            !event.currentTarget.src.includes(
+                              'default-car.png'
+                            )
+                          ) {
+                            event.currentTarget.src =
+                              '/cars/default-car.png'
+                          }
+                        }}
+                      />
 
                       <span
                         className={
-                          vehicle.available !== false
-                            ? 'availability available'
-                            : 'availability sold'
+                          vehicle.condition === 'Used'
+                            ? 'condition-badge used'
+                            : 'condition-badge'
                         }
                       >
-                        {vehicle.available !== false
-                          ? 'Available'
-                          : 'Sold'}
+                        {vehicle.condition ||
+                          'New'}
+                      </span>
+
+                      <span className="fuel-badge">
+                        {vehicle.fuelType ||
+                          'Petrol'}
                       </span>
 
                     </div>
 
-                    <div className="vehicle-price">
-                      ₹
-                      {Number(
-                        vehicle.price || 0
-                      ).toLocaleString('en-IN')}
-                    </div>
+                    {/* CARD CONTENT */}
 
-                    <div className="vehicle-specs">
+                    <div className="admin-card-content">
 
-                      <div>
-                        <span>
-                          Odometer
-                        </span>
+                      <div className="vehicle-title-row">
 
-                        <strong>
+                        <div>
+
+                          <h3>
+                            {vehicle.make}{' '}
+                            {vehicle.model}
+                          </h3>
+
+                          <p className="vehicle-year">
+                            {vehicle.year} ·{' '}
+                            {vehicle.bodyType ||
+                              'Vehicle'}
+                          </p>
+
+                        </div>
+
+                        <span
+                          className={
+                            Number(
+                              vehicle.quantity ?? 1
+                            ) > 0
+                              ? 'availability available'
+                              : 'availability sold'
+                          }
+                        >
                           {Number(
-                            vehicle.odometer ?? 0
-                          ).toLocaleString(
-                            'en-IN'
-                          )}{' '}
-                          km
-                        </strong>
-                      </div>
-
-                      <div>
-                        <span>
-                          Mileage
+                            vehicle.quantity ?? 1
+                          ) > 0
+                            ? 'Available'
+                            : 'Sold'}
                         </span>
 
-                        <strong>
-                          {vehicle.mileage ||
-                            'N/A'}
-                        </strong>
                       </div>
 
-                      <div>
-                        <span>
-                          Transmission
-                        </span>
-
-                        <strong>
-                          {vehicle.transmission ||
-                            'N/A'}
-                        </strong>
+                      <div className="vehicle-price">
+                        ₹
+                        {Number(
+                          vehicle.price || 0
+                        ).toLocaleString(
+                          'en-IN'
+                        )}
                       </div>
 
-                      <div>
-                        <span>
-                          Fuel
-                        </span>
+                      <div className="vehicle-specs">
 
-                        <strong>
-                          {vehicle.fuelType ||
-                            'N/A'}
-                        </strong>
+                        <div>
+                          <span>
+                            Odometer
+                          </span>
+
+                          <strong>
+                            {Number(
+                              vehicle.odometer ?? 0
+                            ).toLocaleString(
+                              'en-IN'
+                            )}{' '}
+                            km
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>
+                            Mileage
+                          </span>
+
+                          <strong>
+                            {vehicle.mileage ||
+                              'N/A'}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>
+                            Transmission
+                          </span>
+
+                          <strong>
+                            {vehicle.transmission ||
+                              'N/A'}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <span>
+                            Fuel
+                          </span>
+
+                          <strong>
+                            {vehicle.fuelType ||
+                              'N/A'}
+                          </strong>
+                        </div>
+
+                      </div>
+
+                      {/* ACTION BUTTONS */}
+
+                      <div className="card-actions">
+
+                        <button
+                          type="button"
+                          className="edit-button"
+                          onClick={() =>
+                            handleEdit(vehicle)
+                          }
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          className="delete-button"
+                          onClick={() =>
+                            handleDelete(
+                              vehicleId
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+
                       </div>
 
                     </div>
 
-                    <div className="card-actions">
-
-                      <button
-                        type="button"
-                        className="edit-button"
-                        onClick={() =>
-                          handleEdit(vehicle)
-                        }
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        type="button"
-                        className="delete-button"
-                        onClick={() =>
-                          handleDelete(
-                            vehicle.id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                </article>
-
-              ))}
+                  </article>
+                )
+              })}
 
             </div>
 
