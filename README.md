@@ -1,36 +1,30 @@
 # AutoVault — Car Dealership Inventory Management System
 
-<p align="center">
-  <strong>AutoVault</strong> is a full-stack vehicle inventory and dealership management platform designed to manage vehicle listings, authentication, inventory operations, and customer purchases through a modern web interface.
-</p>
-
-<p align="center">
-  React • TypeScript • Node.js • Express • MongoDB • JWT • Mongoose
-</p>
+> A full-stack vehicle inventory and dealership management platform built with React, Node.js, Express, TypeScript, and MongoDB.
 
 ---
 
-## Overview
+## 📌 Overview
 
-AutoVault is a full-stack car dealership inventory management system built with a modern frontend and RESTful backend architecture.
+**AutoVault** is a full-stack car dealership inventory management system designed to provide a modern and efficient platform for managing vehicle inventory and customer purchases.
 
-The application provides separate experiences for customers and administrators:
+The application provides separate experiences for **customers** and **administrators**.
 
-- Customers can browse available vehicles, search and filter inventory, view vehicle details, and purchase vehicles.
-- Administrators can securely manage dealership inventory by adding, editing, deleting, and restocking vehicles.
-- Authentication and authorization are handled using JWT-based authentication with role-based access control.
+Customers can browse vehicles, search and filter inventory, view detailed vehicle information, and purchase available vehicles.
 
-The project focuses on clean architecture, reusable components, API-driven communication, and maintainable code organization.
+Administrators can securely manage the dealership inventory by adding, editing, deleting, and restocking vehicles.
+
+The project follows a modular architecture with a React frontend, RESTful Express backend, JWT authentication, role-based authorization, and MongoDB persistence.
 
 ---
 
-## Key Features
+## ✨ Key Features
 
-### Customer Features
+### 👤 Customer Features
 
 - User registration and login
 - JWT-based authentication
-- Browse available vehicle inventory
+- Browse available vehicles
 - Search vehicles by make and model
 - Filter vehicles by:
   - Fuel type
@@ -38,42 +32,43 @@ The project focuses on clean architecture, reusable components, API-driven commu
   - Body type
 - View detailed vehicle information
 - Purchase available vehicles
-- View purchase-related information
-- Responsive and modern user interface
+- Inventory availability tracking
+- Responsive user interface
 
-### Admin Features
+### 👨‍💼 Admin Features
 
 - Secure administrator authentication
 - Admin dashboard
 - Inventory statistics
 - Add new vehicles
-- Edit existing vehicle information
+- Edit existing vehicles
 - Delete vehicles
 - Restock vehicles
 - Upload vehicle images
-- Vehicle condition management
-- Inventory availability tracking
-- Real-time inventory refresh after operations
+- Manage vehicle condition
+- Manage pricing and specifications
+- Track vehicle availability
 
-### Backend Features
+### ⚙️ Backend Features
 
 - RESTful API architecture
 - JWT authentication
 - Role-based authorization
-- MongoDB database integration
+- MongoDB integration
 - Mongoose ODM
 - Request validation
-- Centralized error handling
+- Authentication middleware
+- Admin authorization middleware
 - Vehicle search and filtering
 - Inventory quantity management
-- Purchase transaction handling
-- Admin-only inventory operations
+- Vehicle purchase handling
+- Centralized error handling
 
 ---
 
-## Technology Stack
+# 🛠️ Technology Stack
 
-### Frontend
+## Frontend
 
 - React
 - React Router
@@ -82,7 +77,7 @@ The project focuses on clean architecture, reusable components, API-driven commu
 - Vite
 - Fetch API
 
-### Backend
+## Backend
 
 - Node.js
 - Express.js
@@ -91,12 +86,12 @@ The project focuses on clean architecture, reusable components, API-driven commu
 - bcrypt
 - Mongoose
 
-### Database
+## Database
 
 - MongoDB
 - MongoDB Atlas
 
-### Development Tools
+## Development Tools
 
 - Git
 - GitHub
@@ -107,39 +102,40 @@ The project focuses on clean architecture, reusable components, API-driven commu
 
 ---
 
-## System Architecture
+# 🏗️ Project Architecture
 
 ```text
-                         ┌──────────────────────┐
-                         │      AutoVault       │
-                         │    React Frontend    │
-                         └──────────┬───────────┘
-                                    │
-                              REST API / HTTP
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │     Express API      │
-                         │      TypeScript      │
-                         └──────────┬───────────┘
-                                    │
-                    ┌───────────────┼────────────────┐
-                    │               │                │
-                    ▼               ▼                ▼
-              Authentication    Vehicle API     Purchase API
-                    │               │                │
-                    └───────────────┼────────────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │       MongoDB        │
-                         │       Mongoose       │
-                         └──────────────────────┘
+                         ┌─────────────────────────┐
+                         │        AutoVault        │
+                         │      React Frontend     │
+                         └────────────┬────────────┘
+                                      │
+                                      │ REST API
+                                      ▼
+                         ┌─────────────────────────┐
+                         │      Express Server     │
+                         │       TypeScript        │
+                         └────────────┬────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    │                 │                 │
+                    ▼                 ▼                 ▼
+             Authentication      Vehicle API      Purchase API
+                    │                 │                 │
+                    └─────────────────┼─────────────────┘
+                                      │
+                                      ▼
+                         ┌─────────────────────────┐
+                         │        MongoDB          │
+                         │        Mongoose         │
+                         └─────────────────────────┘
+```
 
+---
 
+# 📁 Project Structure
 
-
-                         Project Structure
+```text
 car-dealership-inventory/
 │
 ├── backend/
@@ -207,11 +203,17 @@ car-dealership-inventory/
 │
 ├── .gitignore
 └── README.md
-Authentication & Authorization
+```
 
-AutoVault uses JWT-based authentication.
+---
 
-Authentication Flow
+# 🔐 Authentication & Authorization
+
+AutoVault uses **JWT-based authentication** to secure protected resources.
+
+## Authentication Flow
+
+```text
 User
  │
  ▼
@@ -221,7 +223,7 @@ Login / Register
 Backend Authentication API
  │
  ▼
-Credentials Validation
+Credential Validation
  │
  ▼
 JWT Token Generated
@@ -234,44 +236,72 @@ Authorization Header
  │
  ▼
 Protected API Routes
+```
 
 Authenticated requests use:
 
+```http
 Authorization: Bearer <JWT_TOKEN>
-Roles
+```
 
-The system supports role-based access:
+---
 
+# 👥 User Roles
+
+The system supports role-based access control.
+
+## USER
+
+```text
 USER
  ├── Browse vehicles
- ├── Search / filter vehicles
+ ├── Search vehicles
+ ├── Filter inventory
  ├── View vehicle details
  └── Purchase vehicles
+```
 
+## ADMIN
+
+```text
 ADMIN
  ├── All user capabilities
  ├── Add vehicles
  ├── Update vehicles
  ├── Delete vehicles
  └── Restock vehicles
-REST API
-Authentication
-Method	Endpoint	Description
-POST	/api/auth/register	Register a new user
-POST	/api/auth/login	Authenticate user
-Vehicles
-Method	Endpoint	Access	Description
-GET	/api/vehicles	Authenticated	Get available vehicles
-GET	/api/vehicles/search	Authenticated	Search vehicles
-POST	/api/vehicles	Authenticated	Add a vehicle
-PUT	/api/vehicles/:id	Authenticated	Update vehicle
-DELETE	/api/vehicles/:id	Admin	Delete vehicle
-POST	/api/vehicles/:id/purchase	Authenticated	Purchase vehicle
-POST	/api/vehicles/:id/restock	Admin	Restock vehicle
-Vehicle Data Model
+```
+
+---
+
+# 🌐 REST API
+
+## Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Authenticate user |
+
+## Vehicles
+
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| GET | `/api/vehicles` | Authenticated | Get available vehicles |
+| GET | `/api/vehicles/search` | Authenticated | Search vehicles |
+| POST | `/api/vehicles` | Authenticated | Add a vehicle |
+| PUT | `/api/vehicles/:id` | Authenticated | Update vehicle |
+| DELETE | `/api/vehicles/:id` | Admin | Delete vehicle |
+| POST | `/api/vehicles/:id/purchase` | Authenticated | Purchase vehicle |
+| POST | `/api/vehicles/:id/restock` | Admin | Restock vehicle |
+
+---
+
+# 🚗 Vehicle Data Model
 
 A vehicle contains information such as:
 
+```text
 make
 model
 category
@@ -287,115 +317,190 @@ location
 image
 createdAt
 updatedAt
+```
 
-Inventory availability is controlled using the quantity field.
+Inventory availability is controlled using the `quantity` field.
 
 Vehicles with:
 
+```text
 quantity > 0
+```
 
 are considered available inventory.
 
-Environment Variables
+---
 
-Create a .env file inside the backend directory.
+# 🔑 Environment Variables
 
+Create a `.env` file inside the `backend` directory.
+
+```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secure_jwt_secret
-Important
+```
 
-Do not commit .env files or production secrets to GitHub.
+### ⚠️ Important
 
-Use:
+Never commit `.env` files, database credentials, JWT secrets, or production credentials to GitHub.
 
+Your `.gitignore` should include:
+
+```gitignore
+node_modules/
 .env
+.env.*
+!.env.example
+dist/
+coverage/
+*.log
+```
 
-inside .gitignore.
+---
 
-Installation
-1. Clone the repository
+# 🚀 Installation
+
+## 1. Clone the Repository
+
+```bash
 git clone <YOUR_GITHUB_REPOSITORY_URL>
 cd car-dealership-inventory
-2. Install backend dependencies
+```
+
+---
+
+## 2. Install Backend Dependencies
+
+```bash
 cd backend
 npm install
-3. Configure environment variables
+```
+
+---
+
+## 3. Configure Environment Variables
 
 Create:
 
+```text
 backend/.env
+```
 
-and add:
+Add:
 
+```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secure_jwt_secret
-4. Start the backend
+```
+
+---
+
+## 4. Start the Backend
+
+```bash
 npm run dev
+```
 
-The backend will run on:
+Backend:
 
+```text
 http://localhost:5000
-Frontend Setup
+```
+
+---
+
+# 💻 Frontend Setup
 
 Open a new terminal:
 
+```bash
 cd frontend
 npm install
+```
 
 Start the frontend:
 
+```bash
 npm run dev
+```
 
-The frontend will typically run on:
+Frontend:
 
+```text
 http://localhost:5173
-Database Setup
+```
 
-AutoVault uses MongoDB.
+---
 
-Make sure MongoDB is running and the connection string is correctly configured in:
+# 🗄️ Database Setup
 
+AutoVault uses **MongoDB** for persistent data storage.
+
+Make sure MongoDB is configured and the connection string is available in:
+
+```text
 backend/.env
+```
 
 Example:
 
+```env
 MONGO_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
-Admin Setup
+```
+
+---
+
+# 👨‍💼 Admin Setup
 
 An administrator can be created using the backend admin creation script.
 
+```bash
 cd backend
 npx tsx createAdmin.ts
+```
 
 Use the credentials configured by the administrator creation script.
 
-Never publish real administrator passwords or secrets in the repository.
+> Never publish real administrator passwords or secrets in the repository.
 
-Vehicle Seeding
+---
+
+# 🌱 Vehicle Seeding
 
 Sample vehicle inventory can be inserted using:
 
+```bash
 cd backend
 npx tsx seedVehicles.ts
+```
 
-This can be useful for development and testing.
+This is useful for development and testing.
 
-Running the Application
+---
+
+# ▶️ Running the Application
 
 Start the backend:
 
+```bash
 cd backend
 npm run dev
+```
 
-Then start the frontend in another terminal:
+Then open another terminal and start the frontend:
 
+```bash
 cd frontend
 npm run dev
+```
 
-Application flow:
+---
 
+# 🔄 Customer Application Flow
+
+```text
 Frontend
    ↓
 Login / Register
@@ -404,12 +509,18 @@ Dashboard
    ↓
 Vehicle Inventory
    ↓
+Search / Filter
+   ↓
 Vehicle Details
    ↓
 Purchase
+```
 
-Admin flow:
+---
 
+# 🔄 Admin Application Flow
+
+```text
 Admin Login
    ↓
 Admin Dashboard
@@ -419,46 +530,68 @@ Inventory Management
    ├── Edit Vehicle
    ├── Delete Vehicle
    └── Restock Vehicle
-Security Considerations
+```
 
-The project follows several security practices:
+---
 
-Passwords are hashed before storage.
-Authentication is handled using JWT.
-Protected API endpoints require authentication.
-Administrative operations require admin authorization.
-Environment variables are used for sensitive configuration.
-Database credentials should never be committed to source control.
+# 🛡️ Security Considerations
 
-For production deployment, additional measures should be considered, including:
+The project implements several security practices:
 
-HTTPS
-Secure cookies
-Refresh-token rotation
-Rate limiting
-Input sanitization
-CORS restrictions
-Security headers
-Production secret management
-Comprehensive API validation
-Testing
+- Password hashing
+- JWT-based authentication
+- Protected API endpoints
+- Role-based authorization
+- Admin-only inventory operations
+- Environment variables for sensitive configuration
+- MongoDB authentication
+- Request validation
+
+For production deployment, additional security measures should be considered:
+
+- HTTPS
+- Secure cookies
+- Refresh-token rotation
+- Rate limiting
+- Input sanitization
+- Strict CORS configuration
+- Security headers
+- Production secret management
+- Comprehensive API validation
+- Logging and monitoring
+
+---
+
+# 🧪 Testing
 
 Backend tests are located under:
 
+```text
 backend/tests/
+```
 
-Current test areas include:
+Current test files include:
 
+```text
 auth.test.ts
 vehicle.test.ts
+```
 
-Run the configured test command from the backend directory:
+Run:
 
+```bash
 npm test
-Development Principles
+```
 
-The project follows a modular architecture separating:
+from the backend directory.
 
+---
+
+# 🧩 Development Architecture
+
+The backend follows a modular architecture:
+
+```text
 Routes
    ↓
 Controllers
@@ -468,105 +601,155 @@ Services
 Models
    ↓
 Database
+```
 
 This separation improves:
 
-Maintainability
-Testability
-Scalability
-Code readability
-Separation of responsibilities
+- Maintainability
+- Testability
+- Scalability
+- Code readability
+- Separation of responsibilities
 
-The frontend follows a component/page/service-based structure so API communication remains separated from UI logic.
+The frontend follows a page/service-based architecture where API communication is separated from UI components.
 
-Future Enhancements
+---
 
-Potential improvements for future versions include:
+# 🔮 Future Enhancements
 
-Advanced vehicle search
-Price range filtering
-Pagination
-Vehicle comparison
-Wishlist functionality
-Customer profiles
-Purchase history
-Payment gateway integration
-Email notifications
-Cloud image storage
-Admin analytics
-Sales reports
-Dashboard charts
-Audit logging
-Deployment using Docker
-CI/CD pipeline
-Automated testing and code coverage
-Project Status
+Potential improvements include:
 
-Status: Completed — Development Version
+- Advanced vehicle search
+- Price range filtering
+- Pagination
+- Vehicle comparison
+- Wishlist functionality
+- Customer profiles
+- Purchase history
+- Payment gateway integration
+- Email notifications
+- Cloud image storage
+- Admin analytics
+- Sales reports
+- Dashboard charts
+- Audit logging
+- Docker deployment
+- CI/CD pipeline
+- Automated testing
+- Code coverage
+- Production deployment
 
-The current implementation includes:
+---
 
-Authentication
-Authorization
-Customer dashboard
-Admin dashboard
-Vehicle CRUD operations
-Inventory management
-Vehicle search and filtering
-Vehicle purchase functionality
-Vehicle restocking
-MongoDB persistence
-Responsive UI
-Backend validation and middleware
-Contributing
+# 📊 Project Status
+
+**Status: Completed — Development Version**
+
+Current implementation includes:
+
+- ✅ User authentication
+- ✅ Admin authentication
+- ✅ JWT authorization
+- ✅ Customer dashboard
+- ✅ Admin dashboard
+- ✅ Vehicle CRUD operations
+- ✅ Inventory management
+- ✅ Vehicle search
+- ✅ Vehicle filtering
+- ✅ Vehicle purchase functionality
+- ✅ Vehicle restocking
+- ✅ MongoDB persistence
+- ✅ Vehicle image upload
+- ✅ Responsive UI
+- ✅ Backend validation
+- ✅ Authentication middleware
+- ✅ Admin authorization middleware
+- ✅ Error handling
+
+---
+
+# 🤝 Contributing
 
 Contributions are welcome.
 
-To contribute:
+Clone the repository:
 
+```bash
 git clone <YOUR_GITHUB_REPOSITORY_URL>
 cd car-dealership-inventory
+```
 
 Create a feature branch:
 
+```bash
 git checkout -b feature/your-feature
+```
 
-Make your changes, test them, and commit:
+Make your changes and test them.
 
+Commit:
+
+```bash
 git add .
 git commit -m "feat: add your feature"
+```
 
-Push the branch:
+Push:
 
+```bash
 git push origin feature/your-feature
+```
 
-Then open a Pull Request.
+Then create a Pull Request.
 
-Git Commit Convention
+---
+
+# 📝 Git Commit Convention
 
 Recommended commit prefixes:
 
-feat:     New functionality
-fix:      Bug fix
-refactor: Code restructuring
-style:    UI / formatting changes
-docs:     Documentation
-test:     Tests
-chore:    Maintenance
+```text
+feat:      New functionality
+fix:       Bug fix
+refactor:  Code restructuring
+style:     UI / formatting
+docs:      Documentation
+test:      Tests
+chore:     Maintenance
+```
 
 Example:
 
+```bash
 git commit -m "feat: implement vehicle inventory management"
-License
+```
+
+---
+
+# 📄 License
 
 This project is intended for educational, portfolio, and development purposes.
 
 Add an appropriate open-source license before distributing the project publicly.
 
-Author
+---
 
-Sravani Reddy Gavinolla
+# 👩‍💻 Author
 
-B.Tech — Computer Science & Engineering
+## Sravani Reddy Gavinolla
 
-GitHub: sravanireddy23
+**B.Tech — Computer Science & Engineering**
+
+GitHub:
+
+```text
+sravanireddy23
+```
+
+---
+
+<p align="center">
+  <strong>AutoVault</strong>
+  <br>
+  Modern vehicle inventory management for a smarter dealership experience.
+</p>
